@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しつもん箱 - 検索結果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>しつもん箱 - 検索結果</h1>
+
+    <!-- 検索フォーム -->
+    <form action="{{ url_for('search') }}" method="post">
+        <label for="search_word">検索：</label>
+        <input type="text" id="search_word" name="search_word">
+        <input type="submit" value="検索">
+    </form>
+
+    <!-- 検索結果 -->
+    <h2>検索結果</h2>
+    <ul>
+    {% for result in search_results %}
+        <li><strong>{{ result.question_text }}</strong>: {{ result.answer_text }}</li>
+    {% endfor %}
+    </ul>
+
+    <!-- 戻るボタン -->
+    <a href="{{ url_for('home') }}">戻る</a>
+</body>
+</html>
