@@ -1,14 +1,53 @@
-from flask import Flask, render_template, request, redirect, url_for
+import bcrypt
+from flask import Flask, render_template, request, redirect, url_for, session
 from models import db, Question
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import or_
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/fukudahideki/Desktop/python_lesson/question_app/question_app.db'
+app.config['SESSION_PERMANENT'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SECRET_KEY'] = os.urandom(24)
+
 db.init_app(app)
+bcrypt = Bcrypt(app)
 
 # アプリケーションコンテキストを手動で設定
 app.app_context().push()
+
+#ユーザー登録
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form['username']
+    password = request.form['password']
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    new_user = User(username=username, password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+    return 'Registered successfully'
+
+#ログイン
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    user = User.query.filter_by(username=username).first()
+    if user and bcrypt.check_password_hash(user.password, password):
+        session['username'] = username
+        return 'Login successful'
+    else:
+        return 'Invalid username or password'
+
+#ログアウト
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return 'Logged out'
 
 # ホームページ
 @app.route('/')
