@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しつもん箱 - 検索結果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="wrapper">
+  <header class="header">
+    <h1>しつもん箱</h1>
+    <img src="{{ url_for('static', filename='images/computer_kuma.png') }}" alt="Computer Kuma">
+  </header>
+
+  <!-- 検索フォーム -->
+  <div class="search">
+    <form action="{{ url_for('search') }}" method="post">
+        <label for="search_word">検索</label>
+        <input type="text" id="search_word" name="search_word">
+        <input type="submit" value="検索">
+    </form>
+  </div>
+<br>
+
+    <!-- 検索結果 -->
+  <div class="search_results">
+    <h2>検索結果</h2>
+    <table　class＝"table">
+      {% for result in search_results %}
+        <tr>
+          <th>[質問]{{ result.question_text }}</th><br>
+          <td>[回答]{{ result.answer_text }}</td><br><br>
+        </tr>
+      {% endfor %}
+    </table>
+  <div>
+
+  <footer>
+    <!-- 戻るボタン -->
+    <a href="{{ url_for('home') }}">戻る</a>
+  </footer>
+</body>
+</html>

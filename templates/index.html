@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しつもん箱</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="wrapper">
+  <header class="header">
+    <h1>しつもん箱</h1>
+    <img src="{{ url_for('static', filename='images/computer_kuma.png') }}" alt="Computer Kuma">
+  </header>
+
+  <!-- 検索フォーム -->
+  <div class="search">
+    <form action="{{ url_for('search') }}" method="post">
+        <label for="search_word">検索</label>
+        <input type="text" id="search_word" name="search_word">
+        <input type="submit" value="検索">
+    </form>
+  </div>
+<br>
+
+  <!-- 質問登録 -->
+  <div class="submit">
+    <form action="{{ url_for('submit_question') }}" method="post">
+        <label for="question">質問</label><br>
+        <textarea id="question" name="question" rows="4" cols="50"></textarea><br>
+        <label for="answer">回答</label><br>
+        <textarea id="answer" name="answer" rows="4" cols="50"></textarea><br>
+        <label for="category">カテゴリ:</label>
+        <select id="category" name="category">
+          {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="登録">
+    </form>
+  </div>
+<br>
+
+  <!-- 最新の5件の質問と回答 -->
+  <div class="latest">
+      <h2>最新の質問と回答</h2>
+      <table　class＝"table">
+        {% for question in latest_questions %}
+          <tr>
+            <th>[質問]{{ question.question_text }}</th><br>
+            <td>[回答]{{ question.answer_text }}</td><br><br>
+          </tr>
+        {% endfor %}
+      </table>
+  </div>
+</div>
+</body>
+</html>
