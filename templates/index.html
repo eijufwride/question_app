@@ -20,6 +20,12 @@
     <form action="{{ url_for('search') }}" method="post">
         <label for="search_word">検索</label>
         <input type="text" id="search_word" name="search_word">
+        <select name="category">
+          <option value="">全てのカテゴリ</option>
+          {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
         <input type="submit" value="検索">
     </form>
   </div>

@@ -81,8 +81,18 @@ def submit_question():
 def search():
     if request.method == 'POST':
         search_word = request.form['search_word']  # フォームから検索ワードを取得
-        # 検索ワードをもとにquestionテーブルのクエリを作成
-        query = Question.query.filter(or_(Question.question_text.contains(search_word), Question.answer_text.contains(search_word)))
+        category_id = request.form['category']  # フォームから選択されたカテゴリIDを取得
+
+        #クエリ作成
+        query = Question.query
+
+        # カテゴリが選択されている場合は、クエリにカテゴリの条件を追加
+        if category_id:
+            query = query.filter_by(category_id=category_id)
+
+        # 検索ワードをもとにクエリを作成
+        query = query.filter(or_(Question.question_text.contains(search_word), Question.answer_text.contains(search_word)))
+
         # 検索結果を取得
         search_results = query.all()
         return render_template('search_results.html', search_results=search_results)
